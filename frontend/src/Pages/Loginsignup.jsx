@@ -10,9 +10,23 @@ const Loginsignup = () => {
     password:"",
     email:""
   })
+  const [error, setError] = useState('');
 
   const changeHandler= (e) =>{
     setFormData({...formData,[e.target.name]:e.target.value})
+    const { name, value } = e.target;
+    
+    // Update form data
+    setFormData({ ...formData, [name]: value });
+
+    // Validate email
+    if (!value) {
+      setError('Email address is required.');
+    } else if (!/\S+@gmail\.com/.test(value)) {
+      setError('Email address must end with @gmail.com.');
+    } else {
+      setError('');
+    }
   }
 
   const login = async ()=>{
@@ -63,7 +77,10 @@ const Loginsignup = () => {
         <h1>{state}</h1>
         <div className="loginsignup-fields">
           {state === "Sign Up"?<input name="username" value={formData.username} onChange={changeHandler} type="text" placeholder="Your Name"/>:<></>}
-          <input name="email" value={formData.email} onChange={changeHandler}  type="email" placeholder="Email Addtress"></input>
+          {/* <input name="email" value={formData.email} onChange={changeHandler}  type="email" placeholder="Email Addtress"></input> */}
+          <input name="email" value={formData.email} onChange={changeHandler} type="email" placeholder="Email Address" required/>
+      {error && <div style={{ color: 'red' }}>{error}</div>}
+
           <input name="password" value={formData.password} onChange={changeHandler}  type="password" placeholder="Password"></input>
         </div>
         <button onClick={()=>{state === "Login"?login():signup()}}>Continue</button>
